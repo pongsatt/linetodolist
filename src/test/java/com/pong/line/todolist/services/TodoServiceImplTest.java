@@ -20,12 +20,21 @@ public class TodoServiceImplTest {
     TodoService todoService = new TodoServiceImpl(todoRepository);
 
     @Test
-    public void itCanParseFullDateAndTimeTask() {
-        Todo todo = todoService.parseTodo("Buy milk : 2/5/18 : 13:00");
+    public void itCanParseFullDateAndTimeSingleDigitTask() {
+        Todo todo = todoService.parseTodo("Buy milk : 2/5/18 : 9:0");
 
         assertNotNull(todo);
         assertEquals("Buy milk", todo.getTask());
-        assertEquals(LocalDateTime.of(2018, 5, 2, 13, 0), todo.getDate());
+        assertEquals(LocalDateTime.of(2018, 5, 2, 9, 0), todo.getDateToLocalDateTime());
+    }
+
+    @Test
+    public void itCanParseFullDateAndTimeDoubleDigitTask() {
+        Todo todo = todoService.parseTodo("Buy milk : 02/05/18 : 09:00");
+
+        assertNotNull(todo);
+        assertEquals("Buy milk", todo.getTask());
+        assertEquals(LocalDateTime.of(2018, 5, 2, 9, 0), todo.getDateToLocalDateTime());
     }
 
     @Test
@@ -34,7 +43,7 @@ public class TodoServiceImplTest {
 
         assertNotNull(todo);
         assertEquals("Buy milk", todo.getTask());
-        assertEquals(LocalDateTime.of(2018, 5, 2, 0, 0), todo.getDate());
+        assertEquals(LocalDateTime.of(2018, 5, 2, 0, 0), todo.getDateToLocalDateTime());
     }
 
     @Test
@@ -43,7 +52,7 @@ public class TodoServiceImplTest {
 
         assertNotNull(todo);
         assertEquals("Finish writing shopping list", todo.getTask());
-        assertEquals(LocalDate.now().atTime(15, 30), todo.getDate());
+        assertEquals(LocalDate.now().atTime(15, 30), todo.getDateToLocalDateTime());
     }
 
     @Test
@@ -52,7 +61,7 @@ public class TodoServiceImplTest {
 
         assertNotNull(todo);
         assertEquals("Watch movie", todo.getTask());
-        assertEquals(LocalDate.now().plus(1, ChronoUnit.DAYS).atTime(18, 0), todo.getDate());
+        assertEquals(LocalDate.now().plus(1, ChronoUnit.DAYS).atTime(18, 0), todo.getDateToLocalDateTime());
     }
 
     @Test

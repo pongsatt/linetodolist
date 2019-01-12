@@ -2,6 +2,7 @@ package com.pong.line.todolist.services;
 
 import com.pong.line.todolist.model.Todo;
 import com.pong.line.todolist.repos.TodoRepository;
+import com.pong.line.todolist.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,7 @@ public class TodoServiceImpl implements TodoService {
                 date = date.toLocalDate().atTime(time);
             }
 
-            return new Todo(task, date);
+            return new Todo(task, DateUtil.localDateTimeToDate(date));
         }
 
         return null;
@@ -107,7 +108,7 @@ public class TodoServiceImpl implements TodoService {
         if (timeStr != null && !"".equals(timeStr)) {
             timeStr = timeStr.trim();
 
-            return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm"));
+            return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("H:m"));
 
         }
 

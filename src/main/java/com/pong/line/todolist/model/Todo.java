@@ -1,10 +1,13 @@
 package com.pong.line.todolist.model;
 
+import com.pong.line.todolist.utils.DateUtil;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 public class Todo {
@@ -13,7 +16,8 @@ public class Todo {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private String id;
     private String task;
-    private LocalDateTime date;
+
+    private Date date;
     private boolean completed;
     private boolean reported;
     private boolean important;
@@ -22,7 +26,7 @@ public class Todo {
     public Todo() {
     }
 
-    public Todo(String task, LocalDateTime date) {
+    public Todo(String task, Date date) {
         this.task = task;
         this.date = date;
     }
@@ -35,11 +39,15 @@ public class Todo {
         this.task = task;
     }
 
-    public LocalDateTime getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public LocalDateTime getDateToLocalDateTime() {
+        return DateUtil.dateToLocalDateTime(date);
+    }
+
+    public void setDate(Date date) {
         this.date = date;
     }
 

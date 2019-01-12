@@ -5,12 +5,14 @@ import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.pong.line.todolist.model.Todo;
 import com.pong.line.todolist.model.User;
+import com.pong.line.todolist.utils.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -94,29 +96,39 @@ public class BotServiceImpl implements BotService {
         builder.append(title);
         builder.append('\n');
 
+
         for (Todo todo : todos) {
+            LocalDateTime d = DateUtil.dateToLocalDateTime(todo.getDate());
+
             builder.append(String.format("- %s @%s %s\n",
                     todo.getTask(),
-                    todo.getDate().format(DATE_FORMAT),
-                    todo.getDate().format(TIME_FORMAT)));
+                    d.format(DATE_FORMAT),
+                    d.format(TIME_FORMAT)));
         }
 
         return builder.toString();
     }
 
     private String processTodoTask(String userId, String text) {
-        Todo todo = todoService.parseTodo(text);
+        try {
+            Todo todo = todoService.parseTodo(text);
 
-        if (todo != null) {
-            User user = userService.saveUser(new User(userId));
-            todo.setUserId(user.getUserId());
-            todoService.addTodo(todo);
+            if (todo != null) {
+                User user = userService.saveUser(new User(userId));
+                todo.setUserId(user.getUserId());
+                todoService.addTodo(todo);
 
-            return String.format("Your task is: %s on %s at %s",
-                    todo.getTask(),
-                    todo.getDate().format(DATE_FORMAT),
-                    todo.getDate().format(TIME_FORMAT));
+                LocalDateTime d = DateUtil.dateToLocalDateTime(todo.getDate());
+
+                return String.format("Your task is: %s on %s at %s",
+                        todo.getTask(),
+                        d.format(DATE_FORMAT),
+                        d.format(TIME_FORMAT));
+            }
+        } catch (Exception e) {
+            log.error("Error occurred. ", e.getMessage());
         }
+
 
         return "Please enter something like 'Buy milk : 2/5/18 : 13:00'";
     }
