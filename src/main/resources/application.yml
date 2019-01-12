@@ -1,0 +1,48 @@
+app:
+  baseurl: http://localhost:8080/
+  report:
+    job:
+      cron: '0 * * * * *'
+
+line:
+  bot:
+    channelToken: CCSqBngPjHuAXvnqv+JO/5M9NPv6sRPU/TFKE+qD79D70xZJE/XLTylbbtwTsVJZGrW+KDoHM66b2idj0aEKsCR3LEkgunveEZIVzq6UdaB1XAbYL84vx31Dgv4p+tO/gk2QBKGEfi65x6rssBcBVgdB04t89/1O/w1cDnyilFU=
+    channelSecret: 846ff585f132f33e415e3a8c4b865df4
+    handler:
+      path: /callback
+
+security:
+  oauth2:
+    client:
+      client-id: 1638234593
+      client-secret: b8fe33ecfa0e5738c02b280cbac888ff
+      client-authentication-scheme: header
+      user-authorization-uri: https://access.line.me/oauth2/v2.1/authorize?scope=profile
+      access-token-uri: https://api.line.me/oauth2/v2.1/token
+    resource:
+      user-info-uri: https://api.line.me/v2/profile
+
+# H2
+spring:
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  resources:
+    static-locations: classpath:/todofront/build/
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./todolistdb
+    username: sa
+    password:
+
+---
+spring:
+    profiles: prod
+app:
+  baseurl: https://linetodolist.herokuapp.com/
+  report:
+      job:
+        cron: '0 0 0,18 * * *'
