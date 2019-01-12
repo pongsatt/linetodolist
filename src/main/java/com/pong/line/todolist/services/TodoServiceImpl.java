@@ -1,6 +1,8 @@
 package com.pong.line.todolist.services;
 
 import com.pong.line.todolist.model.Todo;
+import com.pong.line.todolist.repos.TodoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -8,16 +10,24 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 public class TodoServiceImpl implements TodoService {
+    private final TodoRepository todoRepo;
+
+    @Autowired
+    public TodoServiceImpl(TodoRepository todoRepo) {
+        this.todoRepo = todoRepo;
+    }
+
     @Override
     public Todo parseTodo(String text) {
         if (text != null && !"".equals(text)) {
             String[] split = text.split(" : ");
 
             String task = "";
-            LocalDateTime date = LocalDateTime.now();
+            LocalDateTime date = LocalDate.now().atTime(0, 0);
 
             if (split.length > 0) {
                 task = split[0];
