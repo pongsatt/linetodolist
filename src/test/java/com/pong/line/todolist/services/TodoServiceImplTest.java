@@ -1,17 +1,23 @@
 package com.pong.line.todolist.services;
 
 import com.pong.line.todolist.model.Todo;
+import com.pong.line.todolist.repos.TodoRepository;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyString;
 
 public class TodoServiceImplTest {
 
-    TodoService todoService = new TodoServiceImpl();
+    TodoRepository todoRepository = Mockito.mock(TodoRepository.class);
+    TodoService todoService = new TodoServiceImpl(todoRepository);
 
     @Test
     public void itCanParseFullDateAndTimeTask() {
@@ -47,5 +53,20 @@ public class TodoServiceImplTest {
         assertNotNull(todo);
         assertEquals("Watch movie", todo.getTask());
         assertEquals(LocalDate.now().plus(1, ChronoUnit.DAYS).atTime(18, 0), todo.getDate());
+    }
+
+    @Test
+    public void toggleComplete() {
+        Todo todo = new Todo();
+        todo.setCompleted(false);
+
+        Mockito.when(todoRepository.findByIdAndUserId(anyString(), anyString())).thenReturn(todo);
+
+        todoService.toggleComplete("1", "testsuer1");
+
+        ArgumentCaptor<Todo> captor = ArgumentCaptor.forClass(Todo.class);
+        Mockito.verify(todoRepository).save(captor.capture());
+        Todo savingTodo = captor.getValue();
+        assertEquals(true, savingTodo.isCompleted());
     }
 }

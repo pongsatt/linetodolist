@@ -48,6 +48,61 @@ public class TodoServiceImpl implements TodoService {
         return null;
     }
 
+    @Override
+    public List<Todo> listTodos(String userId) {
+        return todoRepo.findByUserIdOrderByDateAsc(userId);
+    }
+
+    @Override
+    public Todo addTodo(Todo todo) {
+        return todoRepo.save(todo);
+    }
+
+    @Override
+    public Todo toggleComplete(String id, String userId) {
+        Todo todo = todoRepo.findByIdAndUserId(id, userId);
+
+        if (todo != null) {
+            todo.setCompleted(!todo.isCompleted());
+
+            return todoRepo.save(todo);
+        }
+
+        return todo;
+    }
+
+    @Override
+    public Todo toggleImportant(String id, String userId) {
+        Todo todo = todoRepo.findByIdAndUserId(id, userId);
+
+        if (todo != null) {
+            todo.setImportant(!todo.isImportant());
+            return todoRepo.save(todo);
+        }
+
+        return todo;
+    }
+
+    @Override
+    public List<Todo> getAllCompletedButNotReportedTodos(String userId) {
+        return todoRepo.findByCompletedAndReportedAndUserId(true, false, userId);
+    }
+
+    @Override
+    public List<Todo> getAllIncompleteTodos(String userId) {
+        return todoRepo.findByCompletedAndUserId(false, userId);
+    }
+
+    @Override
+    public void updateReported(List<Todo> todos) {
+        if (todos != null && !todos.isEmpty()) {
+            for (Todo todo : todos) {
+                todo.setReported(true);
+                todoRepo.save(todo);
+            }
+        }
+    }
+
     public LocalTime parseTime(String timeStr) {
         if (timeStr != null && !"".equals(timeStr)) {
             timeStr = timeStr.trim();
