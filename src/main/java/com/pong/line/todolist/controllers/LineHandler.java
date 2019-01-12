@@ -1,4 +1,4 @@
-package com.pong.line.todolist;
+package com.pong.line.todolist.controllers;
 
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
@@ -15,8 +15,7 @@ public class LineHandler {
 
     @EventMapping
     public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
-        System.out.println("event: " + event);
-        String replyMsg = botService.getReplyMessage(event.getMessage().getText());
+        String replyMsg = botService.processMessage(event.getSource().getUserId(), event.getMessage().getText());
         return new TextMessage(replyMsg);
     }
 
