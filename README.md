@@ -4,6 +4,10 @@ Todo list chat application based on Spring boot and line java sdk.
 
 Front end is based on React application.
 
+### Prerequisite for this applications ###
+- LINE developer channel for LINE Login
+- LINE developer channel for LINE Messaging API
+
 ## To start the server ##
 
 From command line:
