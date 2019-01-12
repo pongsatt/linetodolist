@@ -7,17 +7,15 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@EnableAutoConfiguration
 @LineMessageHandler
 public class Application {
     @RequestMapping("/")
     String home() {
-        return "Hello World!";
+        return "This is a line todo list chat bot.";
     }
 
     public static void main(String[] args) {
